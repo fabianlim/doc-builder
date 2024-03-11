@@ -202,6 +202,15 @@ def preview_command(args):
             else:
                 shutil.copy(f, dest)
 
+        # make mdx file paths comply with the sveltekit 1.0 routing mechanism
+        # see more: https://learn.svelte.dev/tutorial/pages
+        from doc_builder.utils import sveltify_file_route
+        for mdx_file_path in kit_routes_folder.rglob("*.mdx"):
+            new_path = sveltify_file_route(mdx_file_path)
+            parent_path = os.path.dirname(new_path)
+            os.makedirs(parent_path, exist_ok=True)
+            shutil.move(mdx_file_path, new_path)
+
         # Node
         env = os.environ.copy()
         env["DOCS_LIBRARY"] = env["package_name"] or args.library_name if "package_name" in env else args.library_name
