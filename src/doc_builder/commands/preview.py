@@ -27,8 +27,7 @@ from threading import Thread
 from doc_builder import build_doc
 from doc_builder.commands.build import check_node_is_available, locate_kit_folder
 from doc_builder.commands.convert_doc_file import find_root_git
-from doc_builder.utils import is_watchdog_available, read_doc_config
-
+from doc_builder.utils import is_watchdog_available, read_doc_config, sveltify_file_route
 
 if is_watchdog_available():
     from watchdog.events import FileSystemEventHandler
@@ -103,6 +102,7 @@ if is_watchdog_available():
                             relative_path += "x"
                         src = Path(tmp_out_dir) / Path(src_path).name
                         dest = self.kit_routes_folder / relative_path
+                        dest = sveltify_file_route(dest)
                         shutil.move(src, dest)
             except Exception as e:
                 print(f"Error building: {src_path}\n{e}")
@@ -204,7 +204,6 @@ def preview_command(args):
 
         # make mdx file paths comply with the sveltekit 1.0 routing mechanism
         # see more: https://learn.svelte.dev/tutorial/pages
-        from doc_builder.utils import sveltify_file_route
         for mdx_file_path in kit_routes_folder.rglob("*.mdx"):
             new_path = sveltify_file_route(mdx_file_path)
             parent_path = os.path.dirname(new_path)
