@@ -534,7 +534,8 @@ def resolve_links_in_text(text, package, mapping, page_info):
     version = page_info.get("version", "main")
     language = page_info.get("language", "en")
 
-    prefix = f"/docs/{package_name}/{version}/{language}/"
+    # prefix = f"/docs/{package_name}/{version}/{language}/"
+    prefix = "/"
 
     def _resolve_link(search):
         object_or_param_name, last_char = search.groups()
